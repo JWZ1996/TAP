@@ -1,7 +1,5 @@
 syms s CAint(t) Fct(t) Cat(t) Tt(t) Ca g m K mol kmol cal ro cp k0 E_R h a b ro cp k0 E_R h a b V F Fin CAin Fc Tin Tcin T V0 Fin0 CAin0 Fc0 Tin0 Tcin0 Ca0 T0;
 
-% TODO - dopytac sie piotera czy napewno ok
-
 eq1 =        V * diff(Ca,t) == (Fin*CAin - F*Ca - V*k0*exp(-E_R/T)*Ca);
 eq2 = (V*ro*cp) * diff(T,t) == (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k0*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin));
 
