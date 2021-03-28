@@ -38,6 +38,3 @@ EQ2 = subs(EQ2,...
                [Vs Tins Tcins CAins Fcs Fs Cas Ts Fins]);
 
 
-
-
-
