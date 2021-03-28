@@ -18,7 +18,7 @@ lin2 = taylor(eq2, [V Tin Tcin CAin Fc F Ca T Fin], [V0 Tin0 Tcin0 CAin0 Fc0 F0 
 
 % Podstawiam funkcje w dziedzinie czasu oraz wartosci stale (w domysle z pktu pracy/rownowagi)
 lin1 = subs(lin1,[V Tin Tcin CAin Fc F Ca T Fin],[Vt(t) Tint(t) Tcint(t) CAint(t) Fct(t) Ft(t) Cat(t) Tt(t) Fint(t)]);
-lin1 = subs(lin1,[V Tin Tcin CAin Fc F Ca T Fin],[Vt(t) Tint(t) Tcint(t) CAint(t) Fct(t) Ft(t) Cat(t) Tt(t) Fint(t)]);
+lin2 = subs(lin2,[V Tin Tcin CAin Fc F Ca T Fin],[Vt(t) Tint(t) Tcint(t) CAint(t) Fct(t) Ft(t) Cat(t) Tt(t) Fint(t)]);
 
 % Po zlinearyzowaniu:
 eq1 =        diff(Cat(t),t) == lin1; % (Fin*(CAin - CAin0))/V - (Ca0*F - CAin0*Fin + Ca0*V*k0*exp(-E_R/T0))/V - ((Ca - Ca0)*(F + V*k0*exp(-E_R/T0)))/V - (Ca0*E_R*k0*exp(-E_R/T0)*(T - T0))/T0^2
@@ -36,5 +36,10 @@ EQ2 = subs(EQ2,...
                [laplace(Vt(t),t,s) laplace(Tint(t),t,s) laplace(Cat(t),t,s) laplace(CAint(t),t,s)...
                laplace(Fct(t),t,s) laplace(Ft(t),t,s) laplace(Cat(t),t,s) laplace(Tt(t),t,s) laplace(Fint(t),t,s)],...
                [Vs Tins Tcins CAins Fcs Fs Cas Ts Fins]);
+           
+% Dodane po wyslaniu zapytania - czy to jest ok?
+sys = solve([EQ1 EQ2],[Cas Ts]);
+
+[G]= equationsToMatrix([sys.Cas sys.Ts],[CAins Fcs]);
 
 
