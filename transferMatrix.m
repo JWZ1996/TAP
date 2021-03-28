@@ -2,11 +2,8 @@
 syms s Ca g m K mol kmol cal ro cp k0 E_R h a b ro cp k0 E_R h a b V Fin CAin Fc Tin Tcin T;
 E_R = 8330;
 % 1. Równania nieliniowe
-eq1 =        V * diff(Ca,t) - (Fin*CAin - Fin*Ca - V*k0*exp(-E_R/T)*Ca);
-eq2 = (V*ro*cp) * diff(T,t) - (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k0*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin));
-
-nonLinearLaplace = laplace([eq1 eq2],[Ca T],s);
-%solved = solve(nonLinearLaplace,[CAin Fc]);
+eq1 =        V * diff(Ca,t) == (Fin*CAin - Fin*Ca - V*k0*exp(-E_R/T)*Ca);
+eq2 = (V*ro*cp) * diff(T,t) == (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k0*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin));
 
 % 2. Równania liniowe
 eq1lin =        V * diff(Ca,t) - Fin*CAin - Fin*Ca - -(k0*exp(-E_R/405)*(4100625*Ca - 1620*E_R + 656100*V + 4*E_R*T - 656100))/4100625;
