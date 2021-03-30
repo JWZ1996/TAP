@@ -42,3 +42,12 @@ function [dT] = dT(Ca,T)
 global g m K mol kmol cal min ro cp k0 E_R h a b ro cp k0 E_R h a b V Fin CAin Fc Tin Tcin;
 dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k0*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin))/(V*ro*cp);
 end
+function [dCa] = dCaLin(Ca, T)
+global g m K mol kmol cal min ro cp k0 E_R h a b ro cp k0 E_R h a b V Fin CAin Fc Tin Tcin;
+dCa = -((Ca - Ca0)*(F + V*k0*exp(-E_R/T0)) + Ca0*F - CAin0*Fin - Fin*(CAin - CAin0) + Ca0*V*k0*exp(-E_R/T0) + (Ca0*E_R*V*k0*exp(-E_R/T0)*(T - T0))/T0^2)/V
+end
+
+function [dT] = dTLin(Ca,T)
+global g m K mol kmol cal min ro cp k0 E_R h a b ro cp k0 E_R h a b V Fin CAin Fc Tin Tcin;
+dT = ((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) + Fin*cp*ro)*(Tin - Tin0) - (T - T0)*((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) + F*cp*ro - (Ca0*E_R*V*h*k0*exp(-E_R/T0))/T0^2) + a*(Fc - Fc0)*(T0 - Tin0)*((exp(log(Fc0)*(b + 1))*((a*b*exp(b*log(Fc0)))/(2*Fc0*cp*ro) + 1))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))^2 - (exp(log(Fc0)*(b + 1))*(b + 1))/(Fc0*(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)))) - (a*exp(log(Fc0)*(b + 1))*(T0 - Tin0))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) - F*T0*cp*ro + Fin*Tin0*cp*ro + Ca0*V*h*k0*exp(-E_R/T0) + V*h*k0*exp(-E_R/T0)*(Ca - Ca0)/(V*ro*cp)
+end
