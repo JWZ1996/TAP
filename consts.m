@@ -1,6 +1,6 @@
 
 % ==== Plik zawierajacy globalne stale =====
-global g m K mol kmol cal min ro cp k0 E_R h a b ro cp k0 E_R h a b V Fin CAin Fc Tin Tcin Ca T F V0 Fin0 CAin0 Fc0 Tin0 Tcin0 Ca0 T0;
+global g m K mol kmol cal min ro cp k E_R h a b ro cp k E_R h a b V Fin CAin Fc Tin Tcin Ca T F V0 Fin0 CAin0 Fc0 Tin0 Tcin0 Ca0 T0;
 % ==== Jednostki ====
 % TODO ja lubie cukier syntaktyczny, ale jbc sie wyrzuci
 
@@ -18,7 +18,7 @@ min = 1;
 % ==== Stale ====
 ro = 1e6 * g/m^3;
 cp = 1 * cal/(g*K);
-k0 = 1e10 * 1/min;
+k = 1e10 * 1/min;
 E_R = 8330.1 * 1/K;
 h = 130 * 1e6 * cal/kmol;
 a = 0.516*1e6 * cal/(K*m^3);
