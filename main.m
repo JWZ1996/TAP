@@ -14,7 +14,7 @@ Fc_vect = [18,17,16,15,14,13,12];
 
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
-    [y, t] = rk4(Ca, T, step);
+    [y, t] = rk4(@dCa, @dT, Ca, T, step);
     txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
     figure(1)
     plot(t,y(1,:),'DisplayName',txt);
@@ -26,7 +26,7 @@ hold off
 
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
-    [y, t] = rk4(Ca, T, step);
+    [y, t] = rk4(@dCa, @dT, Ca, T, step);
     txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
     figure(2)
     plot(t,y(2,:),'DisplayName',txt);
@@ -38,7 +38,7 @@ hold off
 
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
-    [y, t] = rk4(Ca, T, step);
+    [y, t] = rk4(@dCa, @dT, Ca, T, step);
     txt = ['Fc = ',num2str(Fc_vect(iter))];
     figure(3)
     plot(t,y(1,:),'DisplayName',txt);
@@ -50,7 +50,7 @@ hold off
 
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
-    [y, t] = rk4(Ca, T, step);
+    [y, t] = rk4(@dCa, @dT, Ca, T, step);
     txt = ['Fc = ',num2str(Fc_vect(iter))];
     figure(4)
     plot(t,y(2,:),'DisplayName',txt);
@@ -60,7 +60,7 @@ end
 legend show
 hold off
 
-function [y,t] = rk4(Ca,T,step)
+function [y,t] = rk4(dCa,dT,Ca,T,step)
 t=0:step:5;
 y(:,1) = [Ca T];
 %wyliczanie wspo³czynników
