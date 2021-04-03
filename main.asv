@@ -6,10 +6,10 @@ global g m K mol kmol cal min ro cp k E_R h a b ro cp k E_R h a b V Fin CAin Fc 
 consts
 % === Symulacja obiektu - RK4 ===
 step = 0.01;
-Ca = 0.0429 * kmol/m^3;
-T =  431.176 * K;
+Ca = 0.16 * kmol/m^3;
+T =  405 * K;
 
-CAin_vect = [2.4, 2.2, 2, 1.8, 1.6, 1.4].*kmol;
+CAin_vect = [2].*kmol;
 Fc_vect = [18,17,16,15,14,13,12];
 
 for iter = 1:1:length(CAin_vect)
