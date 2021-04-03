@@ -8,7 +8,7 @@ g = 1;
 m = 1;
 K = 1;
 mol = 1;
-kmol = 1000 * mol;
+kmol = 1;
 cal = 1;
 
 % TODO Wszystkie jednostki czasu mamy w minutach 
@@ -29,7 +29,7 @@ V = 1 * m^3;
 Fin = 1 * m^3/min;
 CAin = 2 * kmol/m^3;
 Fc = 15 * m^3/min;
-F = Fc;
+F = Fin;
 Tin = 343 * K;
 Tcin = 310 * K;
 Ca = 0.16 * kmol/m^3;
@@ -40,6 +40,7 @@ V0 = 1 * m^3;
 Fin0 = 1 * m^3/min;
 CAin0 = 2 * kmol/m^3;
 Fc0 = 15 * m^3/min;
+F0 = Fin0;
 Tin0 = 343 * K;
 Tcin0 = 310 * K;
 Ca0 = 0.16 * kmol/m^3;
