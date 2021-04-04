@@ -15,7 +15,7 @@ Fc_vect = [18,17,16,15,14,13,12];
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
     [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
+    txt = ['CAin = ',num2str(CAin_vect(iter))];
     figure(1)
     plot(t,y(1,:),'DisplayName',txt);
     title('Stê¿enie Ca w funkcji czasu - skok CAin')
@@ -27,7 +27,7 @@ hold off
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
     [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
+    txt = ['CAin = ',num2str(CAin_vect(iter))];
     figure(2)
     plot(t,y(2,:),'DisplayName',txt);
     title('Temperatura T w funkcji czasu - skok CAin')
@@ -64,7 +64,7 @@ hold off
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
     [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
+    txt = ['CAin = ',num2str(CAin_vect(iter))];
     figure(5)
     plot(t,y(1,:),'DisplayName',txt);
     title('Stê¿enie Ca w funkcji czasu - skok CAin')
@@ -76,7 +76,7 @@ hold off
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
     [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
+    txt = ['CAin = ',num2str(CAin_vect(iter))];
     figure(6)
     plot(t,y(2,:),'DisplayName',txt);
     title('Temperatura T w funkcji czasu - skok CAin')
@@ -109,11 +109,10 @@ end
 legend show
 hold off
 
-% 1 step - 0.01s
-% Ts = 10 -> sampling time = 0.1s
-
 % =============================
-Ts = 10;
+% 1 step - 0.01 min
+  Ts = 10; %  -> sampling time = 0.1min = 6s
+
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
     [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
@@ -165,24 +164,24 @@ hold off
 function [y,t] = rk4(dCa,dT,Ca,T,step)
 t=0:step:5;
 y(:,1) = [Ca T];
-%wyliczanie wspo³czynników
-for i=1:(length(t)-1)
-    k11=dCa(Ca,T);
-    k12=dT(Ca,T);
 
-    k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-    k22=dT(Ca+0.5*step,T+0.5*step*k12);
+    for i=1:(length(t)-1)
+        k11=dCa(Ca,T);
+        k12=dT(Ca,T);
 
-    k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-    k32=dT(Ca+0.5*step,T+0.5*step*k22);
+        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
+        k22=dT(Ca+0.5*step,T+0.5*step*k12);
 
-    k41=dCa(Ca+step,T+step*k31);
-    k42=dT(Ca+step,T+step*k32);
+        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
+        k32=dT(Ca+0.5*step,T+0.5*step*k22);
 
-    Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
-    T=T+(step/6)*(k12+k42+2*(k22+k32));
-    y(:,i+1)=[Ca T];
-end
+        k41=dCa(Ca+step,T+step*k31);
+        k42=dT(Ca+step,T+step*k32);
+
+        Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
+        T=T+(step/6)*(k12+k42+2*(k22+k32));
+        y(:,i+1)=[Ca T];
+    end
 end
 
 function [y,t] = rk4Discrete(dCa,dT,Ca,T,step,Ts)
@@ -212,7 +211,6 @@ for i=1:(length(t)-1)
     y(:,i+1)=acc;
 end
 end
-
 
 function [dCa] = dCa(Ca, T)
 global k E_R V Fin CAin;
