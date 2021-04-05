@@ -10,13 +10,25 @@ B = [ Fin/V,                                                                    
 C = [1 0; 0 1];
 D = zeros(2,2); % Układ z samymi wspolczynnikami rzeczywistymi - macierz zerowa
 
-syms S;
+syms S Z;
+
+% Podstawienie wartosci
 
 % Model ciagly
 model=ss(A,B,C,D);
-G1 = tf(model);
+Gs = vpa((S*eye(size(A))-A)/B*C+D,4);
+G  = tf(model);
 
 % Model dyskretny
-Ts = 0.1 * min; 
-discreteModel = c2d(model,Ts);
-Gd = tf(discreteModel);
+[m1,mtf1,Gz1] = buildDiscreateModel(model, 0.01 * min);
+[m2,mtf2,Gz2] = buildDiscreateModel(model,  0.1 * min);
+[m3,mtf3,Gz3] = buildDiscreateModel(model,    1 * min);
+
+function [m,mtf,Gz] = buildDiscreateModel(in,Ts)
+syms S Z;
+    m = c2d(in,Ts);
+    mtf = tf(m); 
+    Gz  = vpa((Z*eye(size(m.A))-m.A)/m.B*m.C+m.D,4);
+end
+
+

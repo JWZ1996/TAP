@@ -1,5 +1,5 @@
 clear all;
-
+close all;
 syms A B C D s Vt(t) Tint(t) Tcint(t) CAint(t) Fct(t) Ft(t) Fint(t) Cat(t) Tt(t) Ca g m K mol kmol cal ro cp k E_R h a b ro cp k E_R h a b V F Fin CAin Fc Tin Tcin T V0 Fin0 CAin0 Fc0 Tin0 Tcin0 Ca0 T0 Fin0 F0;
 
 syms Vs Tins Tcins CAins Fcs Fs Cas Ts Fins
@@ -54,8 +54,6 @@ B = insertVal( B,2,2,lin2,Fc  );
 % zawartosc w kod
 % 2. ss2tf zwroci maciesz transmitancji - koniec
 % output = ss2tf(A,B,C,D);
-
-output = ss(A,B,C,D);
 
 % Model dyskretny - dyskretna macierz transmitancji
 % 1. Bierzecie macierze A i B i podstawiacie przy uzyciu subs albo
