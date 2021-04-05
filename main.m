@@ -12,22 +12,72 @@ T =  431.176 * K;
 CAin_vect = [2.4, 2.2, 2, 1.8, 1.6, 1.4].*kmol;
 Fc_vect = [18,17,16,15,14,13,12];
 
+%% ============================
+%==========    b)   =============
+figure(1)
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', ':');
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '--');
+hold off
+
+CAin = 2;
+
+figure(2)
+PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', ':');
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '--');
+hold off
+
+figure(3)
+PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', ':');
+PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '--');
+hold off
+
+figure(4)
+PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', ':');
+PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
+hold off
+
+Fc = 15;
 %% =============================
 %========Model nieliniowy=========
-PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 1);
-PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', 2);
-CAin = 2;
-PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 3);
-PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', 4);
-Fc = 15;
+figure(1)
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+hold off
 
+figure(2)
+PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', '--');
+hold off
+
+CAin = 2;
+
+figure(3)
+PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+hold off
+
+figure(4)
+PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
+hold off
+
+Fc = 15;
 %% =============================
 %======Model zlinearyzowany=======
-PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 5);
-PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', 6);
+figure(5)
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+hold off
+
+figure(6)
+PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-');
+hold off
+
 CAin = 2;
-PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 7);
-PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', 8);
+
+figure(7)
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+hold off
+
+figure(8)
+PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-');
+hold off
+
 Fc = 15;
 
 %% =============================
@@ -35,13 +85,24 @@ Fc = 15;
 % 1 step - 0.01 min
 Ts = 10; %  -> sampling time = 0.1min = 6s
 
-PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 9);
-PlotModelDiscrete('CAin', 'T', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', 10); 
-CAin = 2;
-PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 11);
-PlotModelDiscrete('Fc', 'T', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', 12); 
-Fc = 15;
+figure(9)
+PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+hold off
 
+figure(10)
+PlotModelDiscrete('CAin', 'T', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-'); 
+hold off
+
+CAin = 2;
+figure(11)
+PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+hold off
+
+figure(12)
+PlotModelDiscrete('Fc', 'T', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-'); 
+hold off
+
+Fc = 15;
 %%=================================================
 %=====================FUNKCJE======================
 %==================================================
@@ -123,7 +184,7 @@ dT = (a*(Fc - Fc0)*(T0 - Tin)*((exp(log(Fc0)*(b + 1))...
     - F*T0*cp*ro + Fin*Tin*cp*ro + Ca0*V*h*k*exp(-E_R/T0) + V*h*k*exp(-E_R/T0)*(Ca - Ca0))/(V*cp*ro);
 end
  
-function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, figureNum)
+function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, plotStyle)
     global Ca T CAin Fc;
     for iter = 1:1:length(vect)
         if (strcmp(InVar,'CAin') == 1)
@@ -137,18 +198,16 @@ function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, figureNum)
             y_plot = 2;   
         end
            
-        [y, t] = rk4(@dCa, @dT, Ca, T, step);
+        [y, t] = rk4(@dCa, @dT, Ca, T, step); %cze�� Zan Jembowicz tutaj mam pytanie we� no sp�jrz kurcz� jak tu wstawi� do @dCa wszystko na co mam ochot�
         txt = [InVar ' = ',num2str(vect(iter))];
-        figure(figureNum)
-        plot(t,y(y_plot,:),'DisplayName',txt);
+        plot(t,y(y_plot,:),plotStyle,'DisplayName',txt);
         title(titleText)
         hold on
     end
     legend show
-    hold off
-end
+end %o tu pytanie b�dzie Jan
 
-function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCa, dT, step, titleText, figureNum)
+function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCa, dT, step, titleText, plotStyle)
     global Ca T CAin Fc;
     for iter = 1:1:length(vect)
         if (strcmp(InVar,'CAin') == 1)
@@ -164,12 +223,10 @@ function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCa, dT, step, titleText, fi
            
         [y, t] = rk4Discrete(@dCa, @dT, Ca, T, step, Ts);
         txt = [InVar ' = ',num2str(vect(iter))];
-        figure(figureNum)
-        plot(t,y(y_plot,:),'DisplayName',txt);
+        plot(t,y(y_plot,:), plotStyle,'DisplayName',txt);
         title(titleText)
         hold on
     end
     legend show
-    hold off
 end
 
