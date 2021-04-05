@@ -12,157 +12,40 @@ T =  431.176 * K;
 CAin_vect = [2.4, 2.2, 2, 1.8, 1.6, 1.4].*kmol;
 Fc_vect = [18,17,16,15,14,13,12];
 
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter))];
-    figure(1)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
-
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter))];
-    figure(2)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
+%% =============================
+%========Model nieliniowy=========
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 1);
+PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', 2);
 CAin = 2;
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(3)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
-
-
-
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4(@dCa, @dT, Ca, T, step);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(4)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
+PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 3);
+PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', 4);
 Fc = 15;
-% =============================
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter))];
-    figure(5)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
 
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['CAin = ',num2str(CAin_vect(iter))];
-    figure(6)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
+%% =============================
+%======Model zlinearyzowany=======
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 5);
+PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', 6);
 CAin = 2;
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(7)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
-
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(8)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 7);
+PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', 8);
 Fc = 15;
-% =============================
+
+%% =============================
+%=========Model dyskretny=========
 % 1 step - 0.01 min
-  Ts = 10; %  -> sampling time = 0.1min = 6s
+Ts = 10; %  -> sampling time = 0.1min = 6s
 
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
-    figure(9)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
-
-for iter = 1:1:length(CAin_vect)
-    CAin = CAin_vect(iter);
-    [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
-    txt = ['CAin = ',num2str(CAin_vect(iter)/1000)];
-    figure(10)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok CAin')
-    hold on
-end
-legend show
-hold off
+PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', 9);
+PlotModelDiscrete('CAin', 'T', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', 10); 
 CAin = 2;
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(11)
-    plot(t,y(1,:),'DisplayName',txt);
-    title('Stê¿enie Ca w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
-
-for iter = 1:1:length(Fc_vect)
-    Fc = Fc_vect(iter);
-    [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
-    txt = ['Fc = ',num2str(Fc_vect(iter))];
-    figure(12)
-    plot(t,y(2,:),'DisplayName',txt);
-    title('Temperatura T w funkcji czasu - skok Fc')
-    hold on
-end
-legend show
-hold off
+PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', 11);
+PlotModelDiscrete('Fc', 'T', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', 12); 
 Fc = 15;
+
+%%=================================================
+%=====================FUNKCJE======================
+%==================================================
+
 function [y,t] = rk4(dCa,dT,Ca,T,step)
 t=0:step:5;
 y(:,1) = [Ca T];
@@ -238,4 +121,55 @@ dT = (a*(Fc - Fc0)*(T0 - Tin)*((exp(log(Fc0)*(b + 1))...
     + F*cp*ro - (Ca0*E_R*V*h*k*exp(-E_R/T0))/T0^2)...
     - (a*exp(log(Fc0)*(b + 1))*(T0 - Tin))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))...
     - F*T0*cp*ro + Fin*Tin*cp*ro + Ca0*V*h*k*exp(-E_R/T0) + V*h*k*exp(-E_R/T0)*(Ca - Ca0))/(V*cp*ro);
- end
+end
+ 
+function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, figureNum)
+    global Ca T CAin Fc;
+    for iter = 1:1:length(vect)
+        if (strcmp(InVar,'CAin') == 1)
+            CAin = vect(iter);
+        elseif (strcmp(InVar,'Fc') == 1)
+            Fc = vect(iter);   
+        end
+        if (strcmp(OutVar,'Ca') == 1)
+            y_plot = 1;
+        elseif (strcmp(OutVar,'T') == 1)
+            y_plot = 2;   
+        end
+           
+        [y, t] = rk4(@dCa, @dT, Ca, T, step);
+        txt = [InVar ' = ',num2str(vect(iter))];
+        figure(figureNum)
+        plot(t,y(y_plot,:),'DisplayName',txt);
+        title(titleText)
+        hold on
+    end
+    legend show
+    hold off
+end
+
+function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCa, dT, step, titleText, figureNum)
+    global Ca T CAin Fc;
+    for iter = 1:1:length(vect)
+        if (strcmp(InVar,'CAin') == 1)
+            CAin = vect(iter);
+        elseif (strcmp(InVar,'Fc') == 1)
+            Fc = vect(iter);   
+        end
+        if (strcmp(OutVar,'Ca') == 1)
+            y_plot = 1;
+        elseif (strcmp(OutVar,'T') == 1)
+            y_plot = 2;   
+        end
+           
+        [y, t] = rk4Discrete(@dCa, @dT, Ca, T, step, Ts);
+        txt = [InVar ' = ',num2str(vect(iter))];
+        figure(figureNum)
+        plot(t,y(y_plot,:),'DisplayName',txt);
+        title(titleText)
+        hold on
+    end
+    legend show
+    hold off
+end
+
