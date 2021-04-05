@@ -6,7 +6,7 @@ global g m K mol kmol cal min ro cp k E_R h a b ro cp k E_R h a b V Fin CAin Fc 
 consts
 % === Symulacja obiektu - RK4 ===
 step = 0.01;
-Ca = 0.0429 * kmol/m^3;
+Ca = 0.042953 * kmol/m^3;
 T =  431.176 * K;
 
 CAin_vect = [2.4, 2.2, 2, 1.8, 1.6, 1.4].*kmol;
@@ -35,7 +35,7 @@ for iter = 1:1:length(CAin_vect)
 end
 legend show
 hold off
-
+CAin = 2;
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
     [y, t] = rk4(@dCa, @dT, Ca, T, step);
@@ -48,6 +48,8 @@ end
 legend show
 hold off
 
+
+
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
     [y, t] = rk4(@dCa, @dT, Ca, T, step);
@@ -59,7 +61,7 @@ for iter = 1:1:length(Fc_vect)
 end
 legend show
 hold off
-
+Fc = 15;
 % =============================
 for iter = 1:1:length(CAin_vect)
     CAin = CAin_vect(iter);
@@ -84,7 +86,7 @@ for iter = 1:1:length(CAin_vect)
 end
 legend show
 hold off
-
+CAin = 2;
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
     [y, t] = rk4(@dCaLin, @dTLin, Ca, T, step);
@@ -108,7 +110,7 @@ for iter = 1:1:length(Fc_vect)
 end
 legend show
 hold off
-
+Fc = 15;
 % =============================
 % 1 step - 0.01 min
   Ts = 10; %  -> sampling time = 0.1min = 6s
@@ -136,7 +138,7 @@ for iter = 1:1:length(CAin_vect)
 end
 legend show
 hold off
-
+CAin = 2;
 for iter = 1:1:length(Fc_vect)
     Fc = Fc_vect(iter);
     [y, t] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step,Ts);
@@ -160,7 +162,7 @@ for iter = 1:1:length(Fc_vect)
 end
 legend show
 hold off
-
+Fc = 15;
 function [y,t] = rk4(dCa,dT,Ca,T,step)
 t=0:step:5;
 y(:,1) = [Ca T];
@@ -219,13 +221,12 @@ end
 
 function [dT] = dT(Ca,T)
 global  ro cp k E_R h a b V Fin Fc Tin ;
-dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - ...
-    (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin))/(V*ro*cp);
+dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin))/(V*ro*cp);
 end
 
 function [dCa] = dCaLin(Ca, T)
 global k E_R V Fin CAin Ca0 T0 F CAin0;
-dCa = -((Ca - Ca0)*(F + V*k*exp(-E_R/T0)) + Ca0*F - CAin0*Fin - Fin*(CAin - CAin0)... + Ca0*V*k*exp(-E_R/T0) + (Ca0*E_R*V*k*exp(-E_R/T0)*(T - T0))/T0^2)/V;
+dCa = -((Ca - Ca0)*(F + V*k*exp(-E_R/T0)) + Ca0*F - CAin0*Fin - Fin*(CAin - CAin0) + Ca0*V*k*exp(-E_R/T0) + (Ca0*E_R*V*k*exp(-E_R/T0)*(T - T0))/T0^2)/V;
 end
 
 function [dT] = dTLin(Ca,T)
