@@ -9,8 +9,8 @@ step = 0.01;
 Ca = 0.042953 * kmol/m^3;
 T =  431.176 * K;
 
-CAin_vect = [2.4, 2.2, 2, 1.8, 1.6, 1.4].*kmol;
-Fc_vect = [18,17,16,15,14,13,12];
+CAin_vect = [2.4, 2.2, 1.8, 1.6, 1.4 2].*kmol;
+Fc_vect = [18,17,16,14,13,12, 15];
 
 %% ============================
 %==========    b)   =============
@@ -184,7 +184,7 @@ dT = (a*(Fc - Fc0)*(T0 - Tin)*((exp(log(Fc0)*(b + 1))...
     - F*T0*cp*ro + Fin*Tin*cp*ro + Ca0*V*h*k*exp(-E_R/T0) + V*h*k*exp(-E_R/T0)*(Ca - Ca0))/(V*cp*ro);
 end
  
-function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, plotStyle)
+function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)
     global Ca T CAin Fc;
     for iter = 1:1:length(vect)
         if (strcmp(InVar,'CAin') == 1)
@@ -198,14 +198,14 @@ function PlotModel(InVar, OutVar, vect, dCa, dT, step, titleText, plotStyle)
             y_plot = 2;   
         end
            
-        [y, t] = rk4(@dCa, @dT, Ca, T, step); %czeœæ Zan Jembowicz tutaj mam pytanie weŸ no spójrz kurczê jak tu wstawiæ do @dCa wszystko na co mam ochotê
+        [y, t] = rk4(dCaIn, dTIn, Ca, T, step); %czeï¿½ï¿½ Zan Jembowicz tutaj mam pytanie weï¿½ no spï¿½jrz kurczï¿½ jak tu wstawiï¿½ do @dCa wszystko na co mam ochotï¿½
         txt = [InVar ' = ',num2str(vect(iter))];
         plot(t,y(y_plot,:),plotStyle,'DisplayName',txt);
         title(titleText)
         hold on
     end
     legend show
-end %o tu pytanie bêdzie Jan
+end %o tu pytanie bï¿½dzie Jan
 
 function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCa, dT, step, titleText, plotStyle)
     global Ca T CAin Fc;
