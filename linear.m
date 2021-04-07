@@ -4,11 +4,11 @@ syms A B C D s Vt(t) Tint(t) Tcint(t) CAint(t) Fct(t) Ft(t) Fint(t) Cat(t) Tt(t)
 
 syms Vs Tins Tcins CAins Fcs Fs Cas Ts Fins
 eq1 =        V * diff(Ca,t) == (Fin*CAin - F*Ca - V*k*exp(-E_R/T)*Ca);
-eq2 = (V*ro*cp) * diff(T,t) == (Fin*ro*cp*Tin - F*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin));
+eq2 = (V*ro*cp) * diff(T,t) == (Fin*ro*cp*Tin - F*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tcin));
 
 % Stad w punkcie pracy (diff(Ca,t) == 0 oraz diff(T,t) == 0):
 eq1 = (Fin*CAin - F*Ca - V*k*exp(-E_R/T)*Ca); % == 0
-eq2 = (Fin*ro*cp*Tin - F*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin)); % == 0
+eq2 = (Fin*ro*cp*Tin - F*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tcin)); % == 0
 
 % [Ca T]    -> wyjscie
 % [CAin Fc] -> wejscie

@@ -6,11 +6,9 @@ global g m K mol kmol cal min ro cp k E_R h a b ro cp k E_R h a b V Fin CAin Fc 
 consts
 % === Symulacja obiektu - RK4 ===
 step = 0.01;
-Ca = 0.042953 * kmol/m^3;
-T =  431.176 * K;
 
-CAin_vect = [2.6, 2.4, 2.2, 1.8, 1.6, 1.4, 2].*kmol;
-Fc_vect = [12,13,14,16,17,18, 15];
+CAin_vect = [2.6, 2.4, 2.2, 1.8, 1.6, 1.4, 2.0].*kmol;
+Fc_vect = [12, 13, 14, 16, 17, 18, 15];
 
 %% ============================
 t=0:step:5;
@@ -33,18 +31,23 @@ y(:,1) = [Ca T];
         y(:,i+1)=[Ca T];
     end
 plot(y(1,:),y(2,:), '*')
+
+Ca = 0.1597 * kmol/m^3;
+T =  404.7357 * K;
 %% ============================
 %==========    b)   =============
+CAin = 2; Fc = 15;
 
-figure(1)
-PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok CAin', ':');
+figure(2)
 PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok CAin', '--');
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok CAin', ':');
+
 plotLegend('Ca', CAin_vect)
 hold off
 
 CAin = 2; Fc = 15;
 
-figure(2)
+figure(3)
 PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok Fc', ':');
 PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '--');
 plotLegend('Fc', Fc_vect)
@@ -52,7 +55,7 @@ hold off
 
 CAin = 2; Fc = 15;
 
-figure(3)
+figure(4)
 PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', ':');
 PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '--');
 plotLegend('Ca', CAin_vect)
@@ -60,7 +63,7 @@ hold off
 
 CAin = 2; Fc = 15;
 
-figure(4)
+figure(5)
 PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', ':');
 PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
 plotLegend('Fc', Fc_vect)
@@ -69,43 +72,52 @@ hold off
 CAin = 2; Fc = 15;
 %% =============================
 %========Model nieliniowy=========
-figure(1)
-PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
-hold off
-
-figure(2)
-PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', '--');
-hold off
-
-CAin = 2;
-
-figure(3)
-PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
-hold off
-
-figure(4)
-PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
-hold off
+% figure(6)
+% PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
+% hold off
+% 
+% figure(7)
+% PlotModel('CAin', 'T', CAin_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok CAin', '--');
+% hold off
+% 
+% CAin = 2;
+% 
+% figure(8)
+% PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
+% hold off
+% 
+% figure(9)
+% PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
+% hold off
 
 Fc = 15;
 %% =============================
 %======Model zlinearyzowany=======
-figure(5)
+Ts = 10;
+figure(6)
 PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
+PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
+plotLegend('Ca', CAin_vect)
 hold off
 
-figure(6)
+figure(7)
 PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-');
+PlotModelDiscrete('CAin', 'T', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-'); 
+plotLegend('Fc', Fc_vect)
 hold off
 
 CAin = 2;
 
-figure(7)
+figure(8)
 PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
+PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
+plotLegend('Ca', CAin_vect)
 hold off
 
-figure(8)
+figure(9)
 PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-');
+PlotModelDiscrete('Fc', 'T', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-'); 
+plotLegend('Fc', Fc_vect)
 hold off
 
 Fc = 15;
@@ -137,8 +149,10 @@ Fc = 15;
 %=====================FUNKCJE======================
 %==================================================
 
-function [y,t] = rk4(dCa,dT,Ca,T,step)
+function [y,t] = rk4(dCa,dT,CaINPUT,TINPUT,step)
 t=0:step:5;
+Ca = CaINPUT;
+T = TINPUT;
 y(:,1) = [Ca T];
 
     for i=1:(length(t)-1)
@@ -189,29 +203,23 @@ end
 end
 
 function [dCa] = dCa(Ca, T)
-global k E_R V Fin CAin;
+global  CAin0 CAin ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
 dCa = (Fin*CAin - Fin*Ca - V*k*exp(-E_R/T)*Ca)/V;
 end
 
 function [dT] = dT(Ca,T)
-global  ro cp k E_R h a b V Fin Fc Tin ;
-dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tin))/(V*ro*cp);
+global CAin0 CAin ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
+dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tcin))/(V*ro*cp);
 end
 
 function [dCa] = dCaLin(Ca, T)
-global k E_R V Fin CAin Ca0 T0 F CAin0;
+global  CAin0 CAin ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
 dCa = -((Ca - Ca0)*(F + V*k*exp(-E_R/T0)) + Ca0*F - CAin0*Fin - Fin*(CAin - CAin0) + Ca0*V*k*exp(-E_R/T0) + (Ca0*E_R*V*k*exp(-E_R/T0)*(T - T0))/T0^2)/V;
 end
 
 function [dT] = dTLin(Ca,T)
-global  ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tin T0 F ;
-dT = (a*(Fc - Fc0)*(T0 - Tin)*((exp(log(Fc0)*(b + 1))...
-    *((a*b*exp(b*log(Fc0)))/(2*Fc0*cp*ro) + 1))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))^2 ...
-    - (exp(log(Fc0)*(b + 1))*(b + 1))/(Fc0*(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))))...
-    - (T - T0)*((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))...
-    + F*cp*ro - (Ca0*E_R*V*h*k*exp(-E_R/T0))/T0^2)...
-    - (a*exp(log(Fc0)*(b + 1))*(T0 - Tin))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))...
-    - F*T0*cp*ro + Fin*Tin*cp*ro + Ca0*V*h*k*exp(-E_R/T0) + V*h*k*exp(-E_R/T0)*(Ca - Ca0))/(V*cp*ro);
+global  CAin CAin0 ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
+dT = (a*(Fc - Fc0)*(T0 - Tcin)*((exp(log(Fc0)*(b + 1))*((a*b*exp(b*log(Fc0)))/(2*Fc0*cp*ro) + 1))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))^2 - (exp(log(Fc0)*(b + 1))*(b + 1))/(Fc0*(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)))) - (T - T0)*((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) + F*cp*ro - (Ca0*E_R*V*h*k*exp(-E_R/T0))/T0^2) - (a*exp(log(Fc0)*(b + 1))*(T0 - Tcin))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) - F*T0*cp*ro + Fin*Tin*cp*ro + Ca0*V*h*k*exp(-E_R/T0) + V*h*k*exp(-E_R/T0)*(Ca - Ca0))/(V*cp*ro);
 end
  
 function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)

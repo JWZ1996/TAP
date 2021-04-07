@@ -31,8 +31,8 @@ Fc = 15 * m^3/min;
 F = Fin;
 Tin = 343 * K;
 Tcin = 310 * K;
-Ca = 0.042953 * kmol/m^3;
-T =  431.176 * K;
+Ca = 0.15515 * kmol/m^3;
+T =  404.698 * K;
 
 % ==== Punkt pracy tak jak to powinno byc ====
 V0 = V;
