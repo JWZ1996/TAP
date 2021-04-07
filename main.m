@@ -89,38 +89,50 @@ CAin = 2; Fc = 15;
 % figure(9)
 % PlotModel('Fc', 'T', Fc_vect, @dCa, @dT, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
 % hold off
-
-Fc = 15;
+CAin = 2; Fc = 15;
+Fc = 1;
 %% =============================
 %======Model zlinearyzowany=======
-Ts = 10;
+Ts = 50;
 figure(6)
-PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
-PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok CAin', '-');
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Ca w funkcji czasu - skok CAin','.');
+PlotModelDiscrete('CAin', 'Ca', 10, CAin_vect, @dCaLin, @dTLin, step, 'Ca w funkcji czasu - skok CAin', '-');
+PlotModelDiscrete('CAin', 'Ca', 50, CAin_vect, @dCaLin, @dTLin, step, 'Ca w funkcji czasu - skok CAin', '--');
+PlotModelDiscrete('CAin', 'Ca', 100, CAin_vect, @dCaLin, @dTLin, step, 'Ca w funkcji czasu - skok CAin', '+');
 plotLegend('Ca', CAin_vect)
 hold off
+
+CAin = 2; Fc = 15;
 
 figure(7)
-PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-');
-PlotModelDiscrete('CAin', 'T', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-'); 
+PlotModel('CAin', 'T', CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '.');
+PlotModelDiscrete('CAin', 'T', 10, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '-'); 
+PlotModelDiscrete('CAin', 'T', 50, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '--'); 
+PlotModelDiscrete('CAin', 'T', 100, CAin_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok CAin', '+'); 
 plotLegend('Fc', Fc_vect)
 hold off
 
-CAin = 2;
+CAin = 2; Fc = 15;
 
 figure(8)
-PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
-PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '.');
+PlotModelDiscrete('Fc', 'Ca', 10, Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '-');
+PlotModelDiscrete('Fc', 'Ca', 50, Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '--');
+PlotModelDiscrete('Fc', 'Ca', 100, Fc_vect, @dCaLin, @dTLin, step, 'St�enie Ca w funkcji czasu - skok Fc', '+');
 plotLegend('Ca', CAin_vect)
 hold off
 
+CAin = 2; Fc = 15;
+
 figure(9)
-PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-');
-PlotModelDiscrete('Fc', 'T', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-'); 
+PlotModel('Fc', 'T', Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '.');
+PlotModelDiscrete('Fc', 'T', 10, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '-'); 
+PlotModelDiscrete('Fc', 'T', 50, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '--');
+PlotModelDiscrete('Fc', 'T', 100, Fc_vect, @dCaLin, @dTLin, step, 'Temperatura T w funkcji czasu - skok Fc', '+');
 plotLegend('Fc', Fc_vect)
 hold off
 
-Fc = 15;
+CAin = 2; Fc = 15;
 
 %% =============================
 %=========Model dyskretny=========
@@ -174,10 +186,13 @@ y(:,1) = [Ca T];
     end
 end
 
-function [y,t] = rk4Discrete(dCa,dT,Ca,T,step,Ts)
+function [y,t] = rk4Discrete(dCa,dT,CaINPUT,TINPUT,step,Ts)
+Ca = CaINPUT;
+T = TINPUT;
 t=0:step:5;
 y(:,1) = [Ca T];
 acc = [0 0];
+
 %wyliczanie wspo³czynników
 for i=1:(length(t)-1)
     k11=dCa(Ca,T);
