@@ -20,11 +20,11 @@ Gs = vpa((S*eye(size(A))-A)/B*C+D,4);
 G  = tf(model);
 
 % Model dyskretny
-[m1,mtf1,Gz1] = buildDiscreateModel(model, 0.01 * min);
-[m2,mtf2,Gz2] = buildDiscreateModel(model,  0.1 * min);
-[m3,mtf3,Gz3] = buildDiscreateModel(model,    1 * min);
+[m1,mtf1,Gz1] = buildDiscreteModel(model, 0.01 * min);
+[m2,mtf2,Gz2] = buildDiscreteModel(model,  0.1 * min);
+[m3,mtf3,Gz3] = buildDiscreteModel(model,    1 * min);
 
-function [m,mtf,Gz] = buildDiscreateModel(in,Ts)
+function [m,mtf,Gz] = buildDiscreteModel(in,Ts)
 syms S Z;
     m = c2d(in,Ts);
     mtf = tf(m); 

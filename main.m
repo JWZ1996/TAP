@@ -37,16 +37,16 @@ plot(y(1,:),y(2,:), '*')
 %==========    b)   =============
 
 figure(1)
-PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', ':');
-PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '--');
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stï¿½enie Ca w funkcji czasu - skok CAin', ':');
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok CAin', '--');
 plotLegend('Ca', CAin_vect)
 hold off
 
 CAin = 2; Fc = 15;
 
 figure(2)
-PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', ':');
-PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '--');
+PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stï¿½enie Ca w funkcji czasu - skok Fc', ':');
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok Fc', '--');
 plotLegend('Fc', Fc_vect)
 hold off
 
@@ -70,7 +70,7 @@ CAin = 2; Fc = 15;
 %% =============================
 %========Model nieliniowy=========
 figure(1)
-PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+PlotModel('CAin', 'Ca', CAin_vect, @dCa, @dT, step, 'Stï¿½enie Ca w funkcji czasu - skok CAin', '-');
 hold off
 
 figure(2)
@@ -80,7 +80,7 @@ hold off
 CAin = 2;
 
 figure(3)
-PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+PlotModel('Fc', 'Ca', Fc_vect, @dCa, @dT, step, 'Stï¿½enie Ca w funkcji czasu - skok Fc', '-');
 hold off
 
 figure(4)
@@ -91,7 +91,7 @@ Fc = 15;
 %% =============================
 %======Model zlinearyzowany=======
 figure(5)
-PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+PlotModel('CAin', 'Ca', CAin_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok CAin', '-');
 hold off
 
 figure(6)
@@ -101,7 +101,7 @@ hold off
 CAin = 2;
 
 figure(7)
-PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+PlotModel('Fc', 'Ca', Fc_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok Fc', '-');
 hold off
 
 figure(8)
@@ -116,7 +116,7 @@ Fc = 15;
 Ts = 10; %  -> sampling time = 0.1min = 6s
 
 figure(9)
-PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok CAin', '-');
+PlotModelDiscrete('CAin', 'Ca', Ts, CAin_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok CAin', '-');
 hold off
 
 figure(10)
@@ -125,7 +125,7 @@ hold off
 
 CAin = 2;
 figure(11)
-PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Stê¿enie Ca w funkcji czasu - skok Fc', '-');
+PlotModelDiscrete('Fc', 'Ca', Ts, Fc_vect, @dCaLin, @dTLin, step, 'Stï¿½enie Ca w funkcji czasu - skok Fc', '-');
 hold off
 
 figure(12)
@@ -309,4 +309,3 @@ legend(   char(strcat(InVar,equals,{' '},num2str(vect(1)))), char(strcat(InVar,e
           char(strcat(InVar,equals,{' '},num2str(vect(7)))) ...
           );
 end
-
