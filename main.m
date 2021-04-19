@@ -11,20 +11,20 @@ CAin_vect = [2.6, 2.4, 2.2, 1.8, 1.6, 1.4, 2.0].*kmol;
 Fc_vect = [12, 13, 14, 16, 17, 18, 15];
 
 %% ============================
-t=0:step:5;
+t=0:step:10;
 y(:,1) = [Ca T];
     for i=1:(length(t)-1)
         k11=dCa(Ca,T);
         k12=dT(Ca,T);
 
-        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-        k22=dT(Ca+0.5*step,T+0.5*step*k12);
+        k21=dCa(Ca+0.5*step*k11,T+0.5*step*k12);
+        k22=dT(Ca+0.5*step*k11,T+0.5*step*k12);
 
-        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-        k32=dT(Ca+0.5*step,T+0.5*step*k22);
+     	k31=dCa(Ca+0.5*step*k21,T+0.5*step*k22);
+        k32=dT(Ca+0.5*step*k21,T+0.5*step*k22);
 
-        k41=dCa(Ca+step,T+step*k31);
-        k42=dT(Ca+step,T+step*k32);
+        k41=dCa(Ca+step*k31,T+step*k32);
+        k42=dT(Ca+step*k31,T+step*k32);
 
         Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
         T=T+(step/6)*(k12+k42+2*(k22+k32));
@@ -206,18 +206,17 @@ y(:,1) = [Ca T];
         k11=dCa(Ca,T);
         k12=dT(Ca,T);
 
-        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-        k22=dT(Ca+0.5*step,T+0.5*step*k12);
+        k21=dCa(Ca+0.5*step*k11,T+0.5*step*k12);
+        k22=dT(Ca+0.5*step*k11,T+0.5*step*k12);
 
-        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-        k32=dT(Ca+0.5*step,T+0.5*step*k22);
+     	k31=dCa(Ca+0.5*step*k21,T+0.5*step*k22);
+        k32=dT(Ca+0.5*step*k21,T+0.5*step*k22);
 
-        k41=dCa(Ca+step,T+step*k31);
-        k42=dT(Ca+step,T+step*k32);
+        k41=dCa(Ca+step*k31,T+step*k32);
+        k42=dT(Ca+step*k31,T+step*k32);
 
         Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
         T=T+(step/6)*(k12+k42+2*(k22+k32));
-        y(:,i+1)=[Ca T];
     end
 end
 
@@ -230,20 +229,20 @@ acc = [0 0];
 
 %wyliczanie wspo³czynników
 for i=1:(length(t)-1)
-    k11=dCa(Ca,T);
-    k12=dT(Ca,T);
+      k11=dCa(Ca,T);
+      k12=dT(Ca,T);
 
-    k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-    k22=dT(Ca+0.5*step,T+0.5*step*k12);
+      k21=dCa(Ca+0.5*step*k11,T+0.5*step*k12);
+      k22=dT(Ca+0.5*step*k11,T+0.5*step*k12);
 
-    k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-    k32=dT(Ca+0.5*step,T+0.5*step*k22);
+      k31=dCa(Ca+0.5*step*k21,T+0.5*step*k22);
+      k32=dT(Ca+0.5*step*k21,T+0.5*step*k22);
 
-    k41=dCa(Ca+step,T+step*k31);
-    k42=dT(Ca+step,T+step*k32);
+      k41=dCa(Ca+step*k31,T+step*k32);
+      k42=dT(Ca+step*k31,T+step*k32);
 
-    Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
-    T=T+(step/6)*(k12+k42+2*(k22+k32));
+      Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
+      T=T+(step/6)*(k12+k42+2*(k22+k32));
     
     if(mod(i-1,Ts) == 0)
         acc = [Ca T];
@@ -276,14 +275,14 @@ y(:,1) = [Ca T];
         k11=dCa(Ca,T);
         k12=dT(Ca,T);
 
-        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-        k22=dT(Ca+0.5*step,T+0.5*step*k12);
+        k21=dCa(Ca+0.5*step*k11,T+0.5*step*k12);
+        k22=dT(Ca+0.5*step*k11,T+0.5*step*k12);
 
-        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-        k32=dT(Ca+0.5*step,T+0.5*step*k22);
+        k31=dCa(Ca+0.5*step*k21,T+0.5*step*k22);
+        k32=dT(Ca+0.5*step*k21,T+0.5*step*k22);
 
-        k41=dCa(Ca+step,T+step*k31);
-        k42=dT(Ca+step,T+step*k32);
+        k41=dCa(Ca+step*k31,T+step*k32);
+        k42=dT(Ca+step*k31,T+step*k32);
 
         Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
         T=T+(step/6)*(k12+k42+2*(k22+k32));
