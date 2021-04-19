@@ -7,6 +7,10 @@ consts
 % === Symulacja obiektu - RK4 ===
 step = 0.01;
 
+global Ca_START T_START
+Ca_START = Ca0;
+T_START  = T0;
+
 CAin_vect = [2.6, 2.4, 2.2, 1.8, 1.6, 1.4, 2.0].*kmol;
 Fc_vect = [12, 13, 14, 16, 17, 18, 15];
 
@@ -253,26 +257,16 @@ end
 end
 
 function [y,t] = rk4Delay(dCa,dT,CaINPUT,TINPUT,step)
-global Fc CAin Fc0 CAin0;
-
-
 t=0:step:5;
 Ca = CaINPUT;
 T = TINPUT;
-
-testFc = Fc;
-testCAin = CAin;
-
 y(:,1) = [Ca T];
-
+       
     for i=1:(length(t)-1)
-        if(i < 2/5 * (length(t)-1))
-            Fc = Fc0;
-            CAin = CAin0;
-        else
-            Fc = testFc;
-            CAin = testCAin;
-        end;
+        
+        if(t < 2)
+        
+        end
         k11=dCa(Ca,T);
         k12=dT(Ca,T);
 
@@ -312,7 +306,7 @@ dT = (a*(Fc - Fc0)*(T0 - Tcin)*((exp(log(Fc0)*(b + 1))*((a*b*exp(b*log(Fc0)))/(2
 end
  
 function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)
-    global Ca T CAin Fc testIndex;
+    global Ca T CAin Fc;
     colour_vect = [ 0.9294,    0.6941,    0.1255;
                     0,    	   0.4471,    0.7412;
                     0.4941,    0.1843,    0.5569;
@@ -331,7 +325,7 @@ function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)
         elseif (strcmp(OutVar,'T') == 1)
             y_plot = 2;   
         end    
-        [y, t] = rk4Delay(dCaIn, dTIn, Ca, T, step);
+        [y, t] = rk4(dCaIn, dTIn, Ca, T, step);
         %txt = [InVar ' = ',num2str(vect(iter))];
         plot(t,y(y_plot,:),plotStyle,'Color', colour_vect(iter,:),'LineWidth',1.5); %'DisplayName',txt,
         title(titleText)
