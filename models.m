@@ -17,7 +17,7 @@ syms S Z;
 
 % Model ciagly
 model=ss(A,B,C,D);
-Gs = vpa((S*eye(size(A))-A)/B*C+D,4);
+Gs = vpa(C*(S*eye(size(A))-A)\B + D,4);
 G  = tf(model);
 
 % Model dyskretny
@@ -29,7 +29,7 @@ function [m,mtf,Gz] = buildDiscreteModel(in,Ts)
 syms S Z;
     m = c2d(in,Ts);
     mtf = tf(m); 
-    Gz  = vpa((Z*eye(size(m.A))-m.A)/m.B*m.C+m.D,4);
+    Gz  = vpa(m.C*(Z*eye(size(m.A))-m.A)\m.B+m.D,4);
 end
 
 

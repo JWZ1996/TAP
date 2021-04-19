@@ -7,34 +7,44 @@ consts
 % === Symulacja obiektu - RK4 ===
 step = 0.01;
 
-global Ca_START T_START
-Ca_START = Ca0;
-T_START  = T0;
-
 CAin_vect = [2.6, 2.4, 2.2, 1.8, 1.6, 1.4, 2.0].*kmol;
 Fc_vect = [12, 13, 14, 16, 17, 18, 15];
 
 %% ============================
 t=0:step:5;
 y(:,1) = [Ca T];
-    for i=1:(length(t)-1)
-        k11=dCa(Ca,T);
-        k12=dT(Ca,T);
+[y, ~] = rk4(@dCa, @dT, Ca, T, step);
+figure;
+plot(y(1,:),y(2,:), '*');
+title('Osiaganie stanu ustalonego ukladu');
+ylabel('Temperatura T [K]');
+xlabel('Strumien Ca [kmol/m^3]');
 
-        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-        k22=dT(Ca+0.5*step,T+0.5*step*k12);
 
-        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-        k32=dT(Ca+0.5*step,T+0.5*step*k22);
 
-        k41=dCa(Ca+step,T+step*k31);
-        k42=dT(Ca+step,T+step*k32);
+% t=0:step:5;
+% y(:,1) = [Ca T];
+%     for i=1:(length(t)-1)
+%         k11=dCa(Ca,T);
+%         k12=dT(Ca,T);
+% 
+%         k21=dCa(Ca+0.5*step,T+0.5*step*k11);
+%         k22=dT(Ca+0.5*step,T+0.5*step*k12);
+% 
+%         k31=dCa(Ca+0.5*step,T+0.5*step*k21);
+%         k32=dT(Ca+0.5*step,T+0.5*step*k22);
+% 
+%         k41=dCa(Ca+step,T+step*k31);
+%         k42=dT(Ca+step,T+step*k32);
+% 
+%         Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
+%         T=T+(step/6)*(k12+k42+2*(k22+k32));
+%         y(:,i+1)=[Ca T];
+%     end
+% plot(y(1,:),y(2,:), '*')
 
-        Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
-        T=T+(step/6)*(k12+k42+2*(k22+k32));
-        y(:,i+1)=[Ca T];
-    end
-plot(y(1,:),y(2,:), '*')
+
+
 
 %% ============================
 %==========    b)   =============
@@ -165,6 +175,7 @@ PlotModel('CAin', 'Ca', Cain_step, @dCaLin, @dTLin, step, 'Ca w funkcji czasu - 
 PlotModelDiscrete('CAin', 'Ca', TsVec(1), Cain_step, @dCaLin, @dTLin, step, 'Stezenie Ca w funkcji czasu - skok CAin', '-', 2);
 PlotModelDiscrete('CAin', 'Ca', TsVec(2), Cain_step, @dCaLin, @dTLin, step, 'Stezenie Ca w funkcji czasu - skok CAin', '--', 3);
 PlotModelDiscrete('CAin', 'Ca', TsVec(3), Cain_step, @dCaLin, @dTLin, step, 'Stezenie Ca w funkcji czasu - skok CAin', '-.', 4);
+plot(
 legend('Ciagly', 'Ts=6s', 'Ts=30s', 'Ts=60s');
 hold off;
 
@@ -200,13 +211,26 @@ CAin = 2; Fc = 15;  % wartosci w punkcie pracy
 %=====================FUNKCJE======================
 %==================================================
 
-function [y,t] = rk4(dCa,dT,CaINPUT,TINPUT,step)
-t=0:step:5;
+function [y,t] = rk4(dCa,dT,CaINPUT,TINPUT,step, delay)
+global Fc CAin Fc0 CAin0;
+
+t=0:step:8;
 Ca = CaINPUT;
 T = TINPUT;
 y(:,1) = [Ca T];
+testFc = Fc;
+testCAin = CAin;
 
     for i=1:(length(t)-1)
+        if nargin == 6
+             if(i < delay/t(end) * (length(t)-1))
+                Fc = Fc0;
+                CAin = CAin0;
+            else
+                Fc = testFc;
+                CAin = testCAin;
+             end;
+        end;
         k11=dCa(Ca,T);
         k12=dT(Ca,T);
 
@@ -225,15 +249,28 @@ y(:,1) = [Ca T];
     end
 end
 
-function [y,t] = rk4Discrete(dCa,dT,CaINPUT,TINPUT,step,Ts)
+function [y,t] = rk4Discrete(dCa,dT,CaINPUT,TINPUT,step,Ts, delay)
+global Fc CAin Fc0 CAin0;
+
 Ca = CaINPUT;
 T = TINPUT;
-t=0:step:5;
+t=0:step:8;
 y(:,1) = [Ca T];
 acc = [0 0];
+testFc = Fc;
+testCAin = CAin;
 
 %wyliczanie wspo³czynników
 for i=1:(length(t)-1)
+    if nargin == 7
+        if(i < delay/t(end) * (length(t)-1))
+            Fc = Fc0;
+            CAin = CAin0;
+        else
+            Fc = testFc;
+            CAin = testCAin;
+        end;
+    end;
     k11=dCa(Ca,T);
     k12=dT(Ca,T);
 
@@ -254,35 +291,6 @@ for i=1:(length(t)-1)
     end
     y(:,i+1)=acc;
 end
-end
-
-function [y,t] = rk4Delay(dCa,dT,CaINPUT,TINPUT,step)
-t=0:step:5;
-Ca = CaINPUT;
-T = TINPUT;
-y(:,1) = [Ca T];
-       
-    for i=1:(length(t)-1)
-        
-        if(t < 2)
-        
-        end
-        k11=dCa(Ca,T);
-        k12=dT(Ca,T);
-
-        k21=dCa(Ca+0.5*step,T+0.5*step*k11);
-        k22=dT(Ca+0.5*step,T+0.5*step*k12);
-
-        k31=dCa(Ca+0.5*step,T+0.5*step*k21);
-        k32=dT(Ca+0.5*step,T+0.5*step*k22);
-
-        k41=dCa(Ca+step,T+step*k31);
-        k42=dT(Ca+step,T+step*k32);
-
-        Ca=Ca+(step/6)*(k11+k41+2*(k21+k31));
-        T=T+(step/6)*(k12+k42+2*(k22+k32));
-        y(:,i+1)=[Ca T];
-    end
 end
 
 function [dCa] = dCa(Ca, T)
@@ -306,7 +314,7 @@ dT = (a*(Fc - Fc0)*(T0 - Tcin)*((exp(log(Fc0)*(b + 1))*((a*b*exp(b*log(Fc0)))/(2
 end
  
 function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)
-    global Ca T CAin Fc;
+    global Ca T CAin Fc testIndex;
     colour_vect = [ 0.9294,    0.6941,    0.1255;
                     0,    	   0.4471,    0.7412;
                     0.4941,    0.1843,    0.5569;
@@ -325,7 +333,7 @@ function PlotModel(InVar, OutVar, vect, dCaIn, dTIn, step, titleText, plotStyle)
         elseif (strcmp(OutVar,'T') == 1)
             y_plot = 2;   
         end    
-        [y, t] = rk4(dCaIn, dTIn, Ca, T, step);
+        [y, t] = rk4(dCaIn, dTIn, Ca, T, step, 2);
         %txt = [InVar ' = ',num2str(vect(iter))];
         plot(t,y(y_plot,:),plotStyle,'Color', colour_vect(iter,:),'LineWidth',1.5); %'DisplayName',txt,
         title(titleText)
@@ -363,7 +371,7 @@ function PlotModelDiscrete(InVar, OutVar, Ts, vect, dCaIn, dTIn, step, titleText
             ylabel('T [K]'); 
         end
    
-        [y, t] = rk4Discrete(dCaIn, dTIn, Ca, T, step, Ts);
+        [y, t] = rk4Discrete(dCaIn, dTIn, Ca, T, step, Ts, 2);
         %txt = [InVar ' = ',num2str(vect(iter))];
         if nargin == 10
             plot(t,y(y_plot,:),plotStyle,'Color',colour_vect(colour_no,:), 'LineWidth',1.5); %'DisplayName',txt,
@@ -401,6 +409,7 @@ equals = ' = ';
 legend(   char(strcat(InVar,equals,{' '},num2str(vect(1)))), char(strcat(InVar,equals,{' '},num2str(vect(2)))), ...
           char(strcat(InVar,equals,{' '},num2str(vect(3)))), char(strcat(InVar,equals,{' '},num2str(vect(4)))), ...
           char(strcat(InVar,equals,{' '},num2str(vect(5)))), char(strcat(InVar,equals,{' '},num2str(vect(6)))), ...
-          char(strcat(InVar,equals,{' '},num2str(vect(7)))) ...
+          char(strcat(InVar,equals,{' '},num2str(vect(7)))), ...
+          'Location', 'southwest' ...
           );
 end
