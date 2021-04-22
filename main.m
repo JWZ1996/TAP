@@ -20,7 +20,6 @@ title('Osiaganie stanu ustalonego ukladu');
 ylabel('Temperatura T [K]');
 xlabel('Strumien Ca [kmol/m^3]');
 
-
 %% ============================
 %==========    b)   =============
 % Wykresy porownawcze modelow zlinearyzowanego oraz nieliniowego dla
@@ -181,6 +180,37 @@ legend('Ciagly', 'Ts=6s', 'Ts=30s', 'Ts=60s');
 hold off;
 
 CAin = 2; Fc = 15;  % wartosci w punkcie pracy
+
+%% 
+% Porownanie odpowiedzi modeli nieliniowego, liniowego i dyskretnego w
+% przestrzeni stanów
+
+t=0:step:10;
+y(:,1) = [Ca T];
+[y, ~] = rk4(@dCa, @dT, Ca, T, step);
+
+[ylin, ~] = rk4(@dCaLin, @dTLin, Ca, T, step);
+figure; 
+plot(y(2,:), y(1, :), 'b.', ylin(2,:), ylin(1,:), 'ro');
+title('Odpowiedzi modelu nieliniowego i liniowego w przestrzeni stanow');
+legend('nieliniowy', 'liniowy');
+ylabel('Strumien Ca [kmol/m^3]');
+xlabel('Temperatura T [K]');
+
+Ts = [10, 50, 100];
+[ydisc10,~] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step, Ts(1));
+[ydisc50,~] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step, Ts(2));
+[ydisc100,~] = rk4Discrete(@dCaLin, @dTLin, Ca, T, step, Ts(3));
+
+figure;
+plot(ylin(2, :), ylin(1, :), 'ro', ydisc10(2, :), ydisc10(1, :), '.b', ... 
+    ydisc50(2, :), ydisc50(1, :), '+k', ydisc100(2, :), ydisc100(1, :), '*y');
+title('Odpowiedzi modelu liniowego ciaglego i dyskretnego w przestrzeni stanow');
+legend('ciagly', 'Ts=6s', 'Ts=10s', 'Ts=60s');
+ylabel('Strumien Ca [kmol/m^3]');
+xlabel('Temperatura T [K]');
+
+
 %% =================================================
 %=====================FUNKCJE======================
 %==================================================
