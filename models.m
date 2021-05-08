@@ -17,12 +17,17 @@ syms S Z;
 
 % Model ciagly
 model=ss(A,B,C,D);
-Gs = vpa(C*(S*eye(size(A))-A)/B + D,4);
-G  = tf(model);
-figure; step(model,'r--', G, 'b.');
-legend('Przestrzeń stanów', 'Transmitancja');
-title('Ciagly model w przestrzeni stanów i transmitancji');
+s = tf('s');
+Gs = C*(s*eye(size(A))-A)\B + D;
 
+G  = tf(model);
+
+% [y,:] =  rk4(@dCa, @dT, Ca, T, step);
+% figure;
+% % figure; step(model,'r--', G, 'b.');
+% legend('Przestrzeń stanów', 'Transmitancja');
+% title('Ciagly model w przestrzeni stanów i transmitancji');
+%%
 % Model dyskretny
 [m1,mtf1,Gz1] = buildDiscreteModel(model, 0.1 * min);
 [m2,mtf2,Gz2] = buildDiscreteModel(model,  0.5 * min);
@@ -32,7 +37,7 @@ function [m,mtf,Gz] = buildDiscreteModel(in,Ts)
 syms S Z;
     m = c2d(in,Ts);
     mtf = tf(m); 
-    Gz  = vpa(m.C*(Z*eye(size(m.A))-m.A)/m.B+m.D,4);
+    Gz  = vpa(m.C*(Z*eye(size(m.A))-m.A)\m.B+m.D,4);
     figure; step(m, 'r--', mtf, 'b.');
     txt= sprintf('Dyskretny model w przestrzeni stanów i transmitancji, Ts=%.1f min', Ts);
     legend('Przestrzeń stanów', 'Transmitancja');
