@@ -226,15 +226,17 @@ D = zeros(2,2);
 % wektory stanu oraz sterowan
 x = [Ca T]; u0 = [CAin Fc]; 
 dy = zeros(size(y)); y_free = zeros(size(y)); du = zeros(size(y));
-N=1;Nu=1;   % horyzont predykcji; horyzont sterowanie
+N=10;Nu=1;   % horyzont predykcji; horyzont sterowanie
 Y_zad=[Ca T];   
 
 % dla kazdej iteracji wektora stanu wyznaczonego przy pomocy rk4 wyliaczana
 % jest trajektoria swobodna (y_free), trajektoria wymuszana wyjsc 
 % prognozowanych (dy) oraz prawo sterowania (du)
-
+u = [0 0];
+du(:,1) = u;
 for i=1:(size(y,2)-1)
-    [du(:,i), y_free(:,i), dy(:,i)] = predict_output(A, B, C, N, Nu, Y_zad.', y(:,i+1), y(:,i), u0');
+    u = u + du(:,i)';
+    [du(:,i+1), y_free(:,i), dy(:,i)] = predict_output(A, B, C, N, Nu, Y_zad.', y(:,i+1), y(:,i), u');
 end
 y_free = y_free(:,1:end-1);
 dy = dy(:, 1:end-1);
@@ -244,16 +246,17 @@ du = du(:, 1:end-1);
 figure;
 subplot(2, 1, 1);
 t=1:size(y,2)-1;
-plot(t, y(1,1:end-1), t, y_free(1, :));
-title('Osiaganie stanu ustalonego ukladu');
+plot(t, y(1,1:end-1), t, y_free(1, :), t, y_free(1, :) + dy(1, :), 'ok', 'MarkerSize', 1.5);
+text = sprintf('Osiaganie stanu ustalonego ukladu - horyzont predykcji N=%d', N);
+title(text);
 ylabel('Strumien Ca [kmol/m^3]');
 xlabel('Czas');
-legend('Non-linear', 'MPCS free-running');
+legend('Non-linear', 'MPCS free-running', 'Y-free+dy');
 subplot(2, 1, 2);
-plot(t, y(2,1:end-1), t, y_free(2, :));
+plot(t, y(2,1:end-1), t, y_free(2, :), t, y_free(2, :) + dy(2,:), 'ok', 'MarkerSize', 1.5);
 ylabel('Temperatura T [K]');
 xlabel('Czas');
-legend('Non-linear', 'MPCS free-running');
+legend('Non-linear', 'MPCS free-running', 'Y-free+dy');
 
 %% =================================================
 %=====================FUNKCJE======================
