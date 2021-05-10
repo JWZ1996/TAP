@@ -4,8 +4,8 @@ function [du, y_free, dy]=predict_output(A, B, C, N, Nu, Y_zad, x, x_prev, u)
 ny = nn/N;          % liczba wyjsc regulowanych (Ca i T)
 
 psi = eye(nn);
-lambda = eye(nu);
-K = [M'*psi*M + lambda]\M'*psi;
+lambda = eye(nu)*0.001;
+K = [M'*psi*M + lambda]^-1*M'*psi;
 K1=K(1:nu, :);      % macierz nu pierwszych podmacierzy
 Ke = zeros(nu, ny);
 % zmienne pomocnicze - states_part do wyliczania wartosci powiazanych x(k);

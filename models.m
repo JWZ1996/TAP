@@ -1,5 +1,5 @@
-close all
-clear all
+%close all
+%clear all
 consts
 global g m K kmol cal min ro cp k E_R h a b ro cp k E_R h a b V Fin CAin Fc Tin Tcin Ca T F V0 Fin0 CAin0 Fc0 Tin0 Tcin0 Ca0 F0 T0;
 A = [ -(F + V*k*exp(-E_R/T0))/V,                                                                                             -(Ca0*E_R*k*exp(-E_R/T0))/T0^2;
@@ -38,10 +38,10 @@ syms S Z;
     m = c2d(in,Ts);
     mtf = tf(m); 
     Gz  = vpa(m.C*(Z*eye(size(m.A))-m.A)\m.B+m.D,4);
-    figure; step(m, 'r--', mtf, 'b.');
-    txt= sprintf('Dyskretny model w przestrzeni stanów i transmitancji, Ts=%.1f min', Ts);
-    legend('Przestrzeń stanów', 'Transmitancja');
-    title(txt);
+    %figure; step(m, 'r--', mtf, 'b.');
+    %txt= sprintf('Dyskretny model w przestrzeni stanów i transmitancji, Ts=%.1f min', Ts);
+    %legend('Przestrzeń stanów', 'Transmitancja');
+    %title(txt);
 end
 
 
