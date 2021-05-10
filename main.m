@@ -212,7 +212,7 @@ ylabel('Strumien Ca [kmol/m^3]');
 xlabel('Temperatura T [K]');
 
 %% MPCS controller - implementation comparison with model response
-
+close all
 A = [ -(F + V*k*exp(-E_R/T0))/V,                                                                                             -(Ca0*E_R*k*exp(-E_R/T0))/T0^2;
 (h*k*exp(-E_R/T0))/(cp*ro), -((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) + F*cp*ro - (Ca0*E_R*V*h*k*exp(-E_R/T0))/T0^2)/(V*cp*ro)];
  
@@ -221,28 +221,69 @@ B = [Fin/V,                                                                     
 C = [1 0; 0 1];
 D = zeros(2,2);
 
-[y, ~] = rk4(@dCa, @dT, Ca, T, step);
+Ts = 0.1; Tsim = 5;
+contin=ss(A,B,C,D);
+disc=c2d(contin,Ts);
+A=disc.A;
+B=disc.B;
+C=disc.C;
+D=disc.D;
+
+%[y, ~] = rk4(@dCa, @dT, Ca, T, step);
 
 % wektory stanu oraz sterowan
-x = [Ca T]; u0 = [CAin Fc]; 
+u0 = [CAin Fc]; 
 dy = zeros(size(y)); y_free = zeros(size(y)); du = zeros(size(y));
-N=10;Nu=1;   % horyzont predykcji; horyzont sterowanie
-Y_zad=[Ca T];   
+N=10;Nu=2;ny=2;nu=2;   % horyzont predykcji; horyzont sterowanie;rozmiar wyjść; sterowań
+Y_zad=[Ca T];
+
+[M,CtAt,CtV]=MPCSmatrices(A,B,C,N,Nu);
+
+psi=eye(N*ny); 
+lambda1= 0.001;
+lambda2= 0.001;
+lambda=[lambda1 lambda2];
+lambda=diag(repmat(lambda,1,Nu));
+
+Kmat=(M'*psi*M+lambda)^-1*M'*psi; 
+K1=Kmat(1:nu,:);
+
+time=0:Ts:Tsim;
+U=zeros(nu,1); 
+v=[0;0]; 
+y=zeros(ny,1);
+x=[0 0; 0 0];
+iter = 2:Tsim/Ts;
+Yzad=zeros(N*ny,length(iter));
+Yzad(1:2:end)=Y_zad(1);
+Yzad(2:2:end)=Y_zad(2);
+
+for iter = 2:Tsim/Ts-1
+    v(:,iter)=x(:,iter)-(A*x(:,iter-1)+B*U(:,iter-1));  
+    deltaU=K1*(Yzad(:,iter)-CtAt*x(:,iter)-CtV*B*U(:,iter-1)-CtV*v(:,iter));
+  
+    U(:,iter)=U(:,iter-1)+deltaU;
+    
+    y(:,iter)=C*x(:,iter)+D*U(:,iter);
+    x(:,iter+1)=A*x(:,iter)+B*U(:,iter);
+    % wymagane ograniczenie na Ca0
+    x(1,iter+1)=max(x(1,iter+1),Ca0); 
+end
 
 % dla kazdej iteracji wektora stanu wyznaczonego przy pomocy rk4 wyliaczana
 % jest trajektoria swobodna (y_free), trajektoria wymuszana wyjsc 
 % prognozowanych (dy) oraz prawo sterowania (du)
-u = [0 0];
-du(:,1) = u;
-for i=1:(size(y,2)-1)
-    u = u + du(:,i)';
-    [du(:,i+1), y_free(:,i), dy(:,i)] = predict_output(A, B, C, N, Nu, Y_zad.', y(:,i+1), y(:,i), u');
-end
-y_free = y_free(:,1:end-1);
-dy = dy(:, 1:end-1);
-du = du(:, 1:end-1);
+% u = [0 0];
+% du(:,1) = u;
+% for i=1:(size(y,2)-1)
+%     u = u + du(:,i)';
+%     [du(:,i+1), y_free(:,i), dy(:,i)] = predict_output(A, B, C, N, Nu, Y_zad.', y(:,i+1), y(:,i), u');
+% end
+% y_free = y_free(:,1:end-1);
+% dy = dy(:, 1:end-1);
+% du = du(:, 1:end-1);
 
-% porownanie z wartosciami rk4
+%% porownanie z wartosciami rk4
 figure;
 subplot(2, 1, 1);
 t=1:size(y,2)-1;
