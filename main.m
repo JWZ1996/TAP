@@ -20,6 +20,7 @@ title('Osiaganie stanu ustalonego ukladu');
 ylabel('Temperatura T [K]');
 xlabel('Strumien Ca [kmol/m^3]');
 
+
 %% ============================
 %==========    b)   =============
 % Wykresy porownawcze modelow zlinearyzowanego oraz nieliniowego dla
@@ -210,6 +211,49 @@ legend('ciagly', 'Ts=6s', 'Ts=10s', 'Ts=60s');
 ylabel('Strumien Ca [kmol/m^3]');
 xlabel('Temperatura T [K]');
 
+%% MPCS controller - implementation comparison with model response
+
+A = [ -(F + V*k*exp(-E_R/T0))/V,                                                                                             -(Ca0*E_R*k*exp(-E_R/T0))/T0^2;
+(h*k*exp(-E_R/T0))/(cp*ro), -((a*exp(log(Fc0)*(b + 1)))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)) + F*cp*ro - (Ca0*E_R*V*h*k*exp(-E_R/T0))/T0^2)/(V*cp*ro)];
+ 
+B = [Fin/V,                                                                                                                                                                                                                   0;
+    0, (a*(T0 - Tcin)*((exp(log(Fc0)*(b + 1))*((a*b*exp(b*log(Fc0)))/(2*Fc0*cp*ro) + 1))/(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro))^2 - (exp(log(Fc0)*(b + 1))*(b + 1))/(Fc0*(Fc0 + (a*exp(b*log(Fc0)))/(2*cp*ro)))))/(V*cp*ro)];
+C = [1 0; 0 1];
+D = zeros(2,2);
+
+[y, ~] = rk4(@dCa, @dT, Ca, T, step);
+
+% wektory stanu oraz sterowan
+x = [Ca T]; u0 = [CAin Fc]; 
+dy = zeros(size(y)); y_free = zeros(size(y)); du = zeros(size(y));
+N=1;Nu=1;   % horyzont predykcji; horyzont sterowanie
+Y_zad=[Ca T];   
+
+% dla kazdej iteracji wektora stanu wyznaczonego przy pomocy rk4 wyliaczana
+% jest trajektoria swobodna (y_free), trajektoria wymuszana wyjsc 
+% prognozowanych (dy) oraz prawo sterowania (du)
+
+for i=1:(size(y,2)-1)
+    [du(:,i), y_free(:,i), dy(:,i)] = predict_output(A, B, C, N, Nu, Y_zad.', y(:,i+1), y(:,i), u0');
+end
+y_free = y_free(:,1:end-1);
+dy = dy(:, 1:end-1);
+du = du(:, 1:end-1);
+
+% porownanie z wartosciami rk4
+figure;
+subplot(2, 1, 1);
+t=1:size(y,2)-1;
+plot(t, y(1,1:end-1), t, y_free(1, :));
+title('Osiaganie stanu ustalonego ukladu');
+ylabel('Strumien Ca [kmol/m^3]');
+xlabel('Czas');
+legend('Non-linear', 'MPCS free-running');
+subplot(2, 1, 2);
+plot(t, y(2,1:end-1), t, y_free(2, :));
+ylabel('Temperatura T [K]');
+xlabel('Czas');
+legend('Non-linear', 'MPCS free-running');
 
 %% =================================================
 %=====================FUNKCJE======================
@@ -298,12 +342,12 @@ end
 end
 
 function [dCa] = dCa(Ca, T)
-global  CAin0 CAin ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
+global  CAin k E_R V Fin ;
 dCa = (Fin*CAin - Fin*Ca - V*k*exp(-E_R/T)*Ca)/V;
 end
 
 function [dT] = dT(Ca,T)
-global CAin0 CAin ro cp k E_R h a b V Fin Fc Fc0 Tin Ca0 Tcin T0 F ;
+global ro cp k E_R h a b V Fin Fc Tin Tcin ;
 dT = (Fin*ro*cp*Tin - Fin*ro*cp*T + V*h*k*exp(-E_R/T)*Ca - (a*Fc^(b+1)/(Fc+(a*Fc^b/(2*ro*cp))))*(T-Tcin))/(V*ro*cp);
 end
 
