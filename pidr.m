@@ -13,6 +13,7 @@ TOUT = 2;
 Gs.InputName = {'Cain','Fc'};
 Gs.OutputName = {'Ca','T'};
 
+%%
 % =========================================================================
 % Macierz RGA
 
@@ -21,76 +22,81 @@ Gs.OutputName = {'Ca','T'};
 [~,k21] = zero(modelCont(2,1));
 [~,k22] = zero(modelCont(2,2));
 
-K = [k11 k21; k12 k22];
+K = [k11 k21; k12 k22];   
 
 RGA = K.*transpose(inv(K));
 
-%RGA =
-%    0.9929    0.0071
-%    0.0071    0.9929
-
+% wkradl sie wczesnej blad:
+% RGA =
+%     0.0071    0.9929
+%     0.9929    0.0071
 %
+
 % 1.(Cain) Wejscie reguluje 1. (Ca) wyjscie
 % 2.(Fc)   Wejscie reguluje 2. (T) wyjscie 
 
+%%
 % =========================================================================
-% Nastawy regulatora PI
-G11 = Gs(CainIN,CaOUT) + Gs(FcIN,CaOUT);
-G22 = Gs(FcIN,TOUT)    + Gs(CainIN,TOUT);
+% dostrajanie regulatora PI w klasycznej odmianie
+C0 = pidstd(1,1);
+% Controller1 i Controller2 - dostrojone regulatory PI przy otwartej
+% drugiej petli ( wowczas jest tylko jedna petla dla kazdego regulatora i w
+% niej transmitancja jest - odpowiednio - z wejscia 1 do wyjsca 1
+% (CaIN-Ca)iz wejscia 2 do wyjscia 2 (Fc-T)
+C1 = pidtune(Gs(1,1), C0);
+C2 = pidtune(Gs(2,2), C0);
 
-% Nastawy dobrane za pomocą aplikacji pidtuner
-feedbackLineStub = tf(1);
-feedbackLineStubVec = [tf(1) tf(1)];
-timeVector = 0:0.05:5;
+R = [C1 0; 0 C2];   % transmitancje regulatorow
 
-kp1 = 0.01542;
-Ti1 = 0.3186;
-
-kp2 = -2.802e-5;
-Ti2 = 6.852e-5;
-
-R = tf([pidstd(kp1,Ti1) 0; 0 pidstd(kp2,Ti2)]);
-
-
+%%
 % =========================================================================
 % Regulatory rozłączone
 RGs = R*Gs;
 
-lineCainCa = feedback(RGs(CainIN,CaOUT),feedbackLineStub);
-lineFcT    = feedback(RGs(FcIN,TOUT),feedbackLineStub);
-
-
-figure;
-pidTest(lineFcT,Ca0,1,timeVector,true);
-
-figure;
-pidTest(lineCainCa,T0,1,timeVector,true);
-% =========================================================================
-% Regulatory złączone, wyłączone odsprzęganie
-nonCoupled = feedback(feedback(RGs,feedbackLineStub,FcIN,TOUT,-1),feedbackLineStub,CainIN,CaOUT,-1);
+lineCainCa = feedback(RGs(CainIN,CaOUT),1);
+lineFcT    = feedback(RGs(FcIN,TOUT),1);
 
 
 timeVector = 0:0.05:10;
 
+% o ile zmienia sie wartosc zadana w stosunku do punktu pracy
+T_step_size = -5;
+Ca_step_size=2.5;
+
 figure;
-pidTest(nonCoupled(CainIN,CaOUT) + nonCoupled(FcIN,CaOUT),Ca0,1,timeVector,true);
-
-
-
+pidTest(lineFcT,T0,T_step_size,timeVector,true);
 figure;
-pidTest(nonCoupled(FcIN,TOUT) + nonCoupled(CainIN,TOUT),T0,1,timeVector,true);
+pidTest(lineCainCa,Ca0,Ca_step_size,timeVector,true);
 
-
-
-
+%%
 % =========================================================================
-% Regulatory złączone, włączone odsprzęganie
+% Regulatory złączone, wyłączone odsprzęganie
+
+% transmitancje z wejsc do wyjsc - perfidnie zapier... z wykladu 
+% https://studia2.elka.pw.edu.pl/file/21L/103C-ARxxx-MSP-TAP/priv/01RegWielopetlowa%5FSlajdy.pdf
+% slajd 12
+G11 = Gs(CainIN,CaOUT) - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(2,2),R(2,2)*Gs(FcIN,TOUT),1);
+G22 = Gs(FcIN,TOUT)    - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(1,1),R(1,1)*Gs(CainIN,CaOUT),1);
+
+timeVector = 0:0.05:100;
+
+figure;
+pidTest(G11,Ca0,1,timeVector,true);
+figure;
+pidTest(G22,T0,-5,timeVector,true);
+
+
+% %%
+% % =========================================================================
+% % Regulatory złączone, włączone odsprzęganie 
 % D21=-Gs(2,1)/Gs(2,2);
 % D12=-Gs(1,2)/Gs(1,1);
 % 
+% % nie dziala jeszcze!
 % D = [0 D21; D12 0];
+% G11 = Gs(CainIN,CaOUT) - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(2,2),R(2,2)*Gs(FcIN,TOUT)*D(2,1),1);
+% G22 = Gs(FcIN,TOUT)    - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(1,1),R(1,1)*Gs(CainIN,CaOUT)*D(1,2),1);
 % 
-% coupled = feedback(feedback(R*D*Gs,feedbackLineStub,CainIN,CaOUT,-1),feedbackLineStub,FcIN,TOUT,-1);
 % 
 % figure;
 % pidTest(coupled(CainIN,CaOUT) + coupled(FcIN,CaOUT),Ca0,1,timeVector,true);
@@ -99,7 +105,7 @@ pidTest(nonCoupled(FcIN,TOUT) + nonCoupled(CainIN,TOUT),T0,1,timeVector,true);
 % pidTest(coupled(FcIN,TOUT)+ coupled(CainIN,CaOUT),T0,1,timeVector,true);
 
 
-
+%%
 function Lcmax = BLTwsklog(kp1,Ti1,kp2,Ti2,G)
     %podanie modelu obiektu 2x2:
     s=tf('s');
@@ -138,14 +144,14 @@ function Lcmax = BLTwsklog(kp1,Ti1,kp2,Ti2,G)
 end
 
 function [y,t] = pidTest(Gs, outputEquilVal, requestedValue, timeVector,isPlotted)
-    opt = stepDataOptions('InputOffset',0,'StepAmplitude',requestedValue-outputEquilVal);
+    opt = stepDataOptions('InputOffset',0,'StepAmplitude',requestedValue);
     y = step(Gs,timeVector,opt);
 
     y=y+outputEquilVal;
 
     if isPlotted
         plot(timeVector,y);
-        yline(requestedValue);
+        yline(outputEquilVal+requestedValue);
     end
 end
 
