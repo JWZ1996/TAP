@@ -38,10 +38,10 @@ syms S Z;
     m = c2d(in,Ts);
     mtf = tf(m); 
     Gz  = vpa(m.C*(Z*eye(size(m.A))-m.A)\m.B+m.D,4);
-    figure; step(m, 'r--', mtf, 'b.');
-    txt= sprintf('Dyskretny model w przestrzeni stanów i transmitancji, Ts=%.1f min', Ts);
-    legend('Przestrzeń stanów', 'Transmitancja');
-    title(txt);
+    %figure; step(m, 'r--', mtf, 'b.');
+    %txt= sprintf('Dyskretny model w przestrzeni stanów i transmitancji, Ts=%.1f min', Ts);
+    %legend('Przestrzeń stanów', 'Transmitancja');
+    %title(txt);
 end
 
 
