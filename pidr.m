@@ -41,10 +41,10 @@ RGA = K.*transpose(inv(K));
 C0 = pidstd(1,1);
 % Controller1 i Controller2 - dostrojone regulatory PI przy otwartej
 % drugiej petli ( wowczas jest tylko jedna petla dla kazdego regulatora i w
-% niej transmitancja jest - odpowiednio - z wejscia 1 do wyjsca 1
-% (CaIN-Ca)iz wejscia 2 do wyjscia 2 (Fc-T)
-C1 = pidtune(Gs(1,1), C0);
-C2 = pidtune(Gs(2,2), C0);
+% niej transmitancja jest - odpowiednio - z wejscia 1 do wyjsca 2
+% (CaIN-T)iz wejscia 2 do wyjscia 1 (Fc-Ca)
+C1 = pidtune(Gs(1,2), C0);
+C2 = pidtune(Gs(2,1), C0);
 
 R = [C1 0; 0 C2];   % transmitancje regulatorow
 
@@ -53,8 +53,21 @@ R = [C1 0; 0 C2];   % transmitancje regulatorow
 % Regulatory rozłączone
 RGs = R*Gs;
 
-lineCainCa = feedback(RGs(CainIN,CaOUT),1);
-lineFcT    = feedback(RGs(FcIN,TOUT),1);
+lineCainT = feedback(RGs(CainIN,TOUT),1);
+lineFcCa    = feedback(RGs(FcIN,CaOUT),1);
+
+%%
+% =========================================================================
+% Regulatory złączone, wyłączone odsprzęganie
+
+% transmitancje z wejsc do wyjsc - perfidnie zapier... z wykladu 
+% https://studia2.elka.pw.edu.pl/file/21L/103C-ARxxx-MSP-TAP/priv/01RegWielopetlowa%5FSlajdy.pdf
+% slajd 12
+% G11 = R(1,1)*(Gs(CainIN,TOUT) - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(2,2),R(2,2)*Gs(FcIN,CaOUT),1));
+% G22 = R(2,2)*(Gs(FcIN,CaOUT) - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(1,1),R(1,1)*Gs(CainIN,TOUT),1));
+
+G11 = R(1,1)*(Gs(1,2)-(Gs(1,2)*Gs(2,1)*R(2,2))/(1+R(2,2)*Gs(2,1)));
+G22 = R(2,2)*(Gs(2,1)-(Gs(2,1)*Gs(1,2)*R(1,1)/(1+R(1,1)*Gs(1,2))));
 
 
 timeVector = 0:0.05:10;
@@ -64,29 +77,19 @@ T_step_size = -5;
 Ca_step_size=2.5;
 
 figure;
-pidTest(lineFcT,T0,T_step_size,timeVector,true);
+pidTest(lineFcCa,T0,T_step_size,timeVector,true);
+hold on;
+pidTest(G22,T0,T_step_size,timeVector,true);
+legend("Otwarta petla 2-1", "Zamknieta petla 2-1")
 figure;
-pidTest(lineCainCa,Ca0,Ca_step_size,timeVector,true);
+pidTest(lineCainT,Ca0,Ca_step_size,timeVector,true);
+hold on;
+pidTest(G11,Ca0,Ca_step_size,timeVector,true);
+legend("Otwarta petla 1-2", "Zamknieta petla 1-2")
+
+
 
 %%
-% =========================================================================
-% Regulatory złączone, wyłączone odsprzęganie
-
-% transmitancje z wejsc do wyjsc - perfidnie zapier... z wykladu 
-% https://studia2.elka.pw.edu.pl/file/21L/103C-ARxxx-MSP-TAP/priv/01RegWielopetlowa%5FSlajdy.pdf
-% slajd 12
-G11 = Gs(CainIN,CaOUT) - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(2,2),R(2,2)*Gs(FcIN,TOUT),1);
-G22 = Gs(FcIN,TOUT)    - feedback(Gs(FcIN,CaOUT)*Gs(CainIN,TOUT)*R(1,1),R(1,1)*Gs(CainIN,CaOUT),1);
-
-timeVector = 0:0.05:100;
-
-figure;
-pidTest(G11,Ca0,1,timeVector,true);
-figure;
-pidTest(G22,T0,-5,timeVector,true);
-
-
-% %%
 % % =========================================================================
 % % Regulatory złączone, włączone odsprzęganie 
 % D21=-Gs(2,1)/Gs(2,2);
