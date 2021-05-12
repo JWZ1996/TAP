@@ -1,10 +1,9 @@
-close all;
-clear all;
+function [] = MPCS_an_func(Nu, N, Ts, Tsim, lambda1, lambda2, psi1, psi2)
 
 global Ca0 T0 CAin0 Fc0;
 
 [A, B, C, D] = import_ABCD();
-Ts = 0.01; Tsim = 30;
+% Ts = 0.01; Tsim = 30; pobieramy z argumentów
 contin=ss(A,B,C,D);
 disc=c2d(contin,Ts);
 A=disc.A;
@@ -12,20 +11,17 @@ B=disc.B;
 C=disc.C;
 D=disc.D;
 
-% horyzont predykcji; horyzont sterowanie;rozmiar wyjść; rozmiar sterowań
-N=30;Nu=25;ny=2;nu=2;   
+% horyzont predykcji; horyzont sterowanie; rozmiar wyjść; rozmiar sterowań
+% N=30;Nu=25; pobieramy z argumentów  
+ny=2;nu=2;  
 
 %wyznaczanie macierzy algorytmu MPCS
 [M,CtAt,CtV]=MPCSmatrices(A,B,C,N,Nu);
 
 %macierze kar
-psi1 = 1;
-psi2 = 1;
 psi=[psi1 psi2];
 psi=diag(repmat(psi,1,N));
 
-lambda1= 0.01;
-lambda2= 0.01;
 lambda=[lambda1 lambda2];
 lambda=diag(repmat(lambda,1,Nu));
 
@@ -41,7 +37,7 @@ U=zeros(nu,length(iter)+1);
 v=zeros(nu,length(iter)+1); 
 y=zeros(ny,length(iter)+1);
 x=zeros(ny,length(iter)+1);
-Yzad=zeros(N*ny,length(iter)+1);
+Yzad=zeros(N*ny,length(iter));
 
 for iter = 2:Tsim/Ts-1
         %% zmiana wartości zadanych
@@ -85,9 +81,6 @@ for iter = 2:Tsim/Ts-1
     % x(1,iter+1)=max(x(1,iter+1),-Ca0); 
 end
 
-iter = 2:Tsim/Ts;
-
-figure;
 subplot(2,2,1);
 grid on;
 hold on;
@@ -104,7 +97,6 @@ title('Wyjście 2 - temperatura')
 xlabel('Czas symulacji [min]')
 ylabel('T [K]') 
 
-
 subplot(2,2,3);
 grid on;
 hold on;
@@ -112,7 +104,6 @@ plot(time,U(1,:)+CAin0);
 title('Sterowanie 1 - wejściowe stężenie substancji A')
 xlabel('Czas symulacji [min]')
 ylabel('CAin [kmol/m3]') 
-
 
 subplot(2,2,4);
 grid on;
