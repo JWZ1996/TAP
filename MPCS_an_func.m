@@ -37,7 +37,7 @@ U=zeros(nu,length(iter)+1);
 v=zeros(nu,length(iter)+1); 
 y=zeros(ny,length(iter)+1);
 x=zeros(ny,length(iter)+1);
-Yzad=zeros(N*ny,length(iter));
+Yzad=zeros(N*ny,length(iter)+1);
 
 for iter = 2:Tsim/Ts-1
         %% zmiana wartości zadanych
@@ -85,6 +85,7 @@ subplot(2,2,1);
 grid on;
 hold on;
 plot(time,y(1,:)+Ca0);
+plot(time,Yzad(1,:)+Ca0, 'r--')
 title('Wyjście 1 - stężenie substancji A')
 xlabel('Czas symulacji [min]')
 ylabel('Ca [kmol/m3]') 
@@ -93,6 +94,8 @@ subplot(2,2,2);
 grid on;
 hold on;
 plot(time,y(2,:)+T0);
+hold on;
+plot(time,Yzad(2,:)+T0, 'r--')
 title('Wyjście 2 - temperatura')
 xlabel('Czas symulacji [min]')
 ylabel('T [K]') 
