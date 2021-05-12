@@ -69,7 +69,7 @@ for iter = 2:Tsim/Ts-1
     dU=K1*(Yzad(:,iter)-CtAt*x(:,iter)-CtV*B*U(:,iter-1)-CtV*v(:,iter)); %W5 10/47
     U(:,iter)=U(:,iter-1)+dU; %wyrażenie przyrostowego charakteru regulacji
     
-    U(1,iter)=min(U(1,iter), 4 - CAin0); %ograniczenie na Cain
+    U(1,iter)=min(U(1,iter), 5 - CAin0); %ograniczenie na Cain
     U(1,iter)=max(U(1,iter), 0 - CAin0); %odjęcie wartości dla punktu pracy: przyrost -2 oznacza, że wartość spadnie z 2 do 0, a to fizyczna granica
     
     U(2,iter)=min(U(2,iter),30-Fc0); %ograniczenia na Fc;
