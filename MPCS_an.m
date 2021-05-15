@@ -46,25 +46,27 @@ Yzad=zeros(N*ny,length(iter)+1);
 for iter = 2:Tsim/Ts-1
         %% zmiana wartości zadanych
     if(iter<0.1*length(time))
-        Yzad(:,iter)=[ones(N,1)*0; ones(N,1)*0];
-    elseif(iter<(1/3)*length(time)) 
-        yzad=[0; 5]; 
+        yzad=[0; 0]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
-    elseif(iter<0.6*length(time)) 
+    elseif(iter<0.2*length(time)) 
+        yzad=[0; 5]; 
+        Yzad(1:2:end,iter)=yzad(1);
+        Yzad(2:2:end,iter)=yzad(2);    
+    elseif(iter<0.4*length(time)) 
         yzad=[0.01; 5]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
-    elseif(iter<0.8*length(time)) 
+    elseif(iter<0.6*length(time)) 
         yzad=[0.01; -5]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
-	elseif(iter<0.9*length(time)) 
+	elseif(iter<0.8*length(time)) 
         yzad=[-0.01; -5]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
     else
-        yzad=[-0.01; -5];
+        yzad=[0; 0]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
     end
