@@ -46,19 +46,19 @@ for iter = 2:Tsim/Ts-1
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
     elseif(iter<0.2*length(time)) 
-        yzad=[0; -2]; 
+        yzad=[0; 0];  %[0; -2]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);    
     elseif(iter<0.4*length(time)) 
-        yzad=[0.01; -2]; 
+        yzad=[0.01; 0]; %[0.01; -2]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
     elseif(iter<0.6*length(time)) 
-        yzad=[0.01; 2]; 
+        yzad=[0.01; 0];  %[0.01; 2]; 
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
 	elseif(iter<0.8*length(time)) 
-        yzad=[-0.01; -5]; 
+        yzad=[-0.01; 0];  %[-0.01; -5];
         Yzad(1:2:end,iter)=yzad(1);
         Yzad(2:2:end,iter)=yzad(2);
     else
@@ -81,24 +81,49 @@ for iter = 2:Tsim/Ts-1
     x(:,iter+1)=A*x(:,iter)+B*U(:,iter); %składowa wymuszona - W5 3/47
 end
 
-subplot(2,2,1);
+% pidr
+% [y1,t1]=lsim(G12,Yzad(1,:),time);
+% [y2,t2]=lsim(G21,Yzad(2,:),time);
+% y1bool = zeros(length(y1),1);
+% 
+% for i = 1:length(y1)
+%     if(abs(abs(y1(i))-0.01)<0.001)
+%         y1bool(i) = 1;
+%     else
+%         y1bool(i) = 0;
+%     end
+% end
+
+figure;
 grid on;
 hold on;
 plot(time,y(1,:)+Ca0);
-plot(time,Yzad(1,:)+Ca0, 'r--')
+hold on
+% plot(t1, y1+Ca0);
+% hold on
+% plot(t1, y1bool);
+% hold on
+plot(time,Yzad(1,:)+Ca0, 'm--')
+
 title('Wyjście 1 - stężenie substancji A')
 xlabel('Czas symulacji [min]')
-ylabel('Ca [kmol/m3]') 
+ylabel('Ca [kmol/m3]')
+legend('MPCS', 'PID', 'Wartość zadana', 'bool')
 
-subplot(2,2,2);
+hold off
+figure;
 grid on;
 hold on;
 plot(time,y(2,:)+T0);
+% hold on;
+% plot(t2, y2+T0);
 hold on;
-plot(time,Yzad(2,:)+T0, 'r--')
+plot(time,Yzad(2,:)+T0, 'm--')
 title('Wyjście 2 - temperatura')
 xlabel('Czas symulacji [min]')
-ylabel('T [K]') 
+ylabel('T [K]')
+legend('MPCS', 'PID', 'Wartość zadana')
+
 
 subplot(2,2,3);
 grid on;

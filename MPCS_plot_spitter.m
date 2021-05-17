@@ -34,7 +34,8 @@ figure('units','normalized','outerposition',[0 0 1 1]) %8
 N = 15; Nu = 10; p1 = 30; p2 = 30;
 MPCS_an_func(Nu, N, Ts, Tsim, l1, l2, p1, p2)
 
-figure('units','normalized','outerposition',[0 0 1 1]) %10
+
+%figure('units','normalized','outerposition',[0 0 1 1]) %10
 N = 10; Nu = 3;
 MPCS_an_func(Nu, N, Ts, Tsim, l1, l2, p1, p2)
 
